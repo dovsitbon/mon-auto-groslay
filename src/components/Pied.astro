@@ -1,0 +1,31 @@
+---
+import { SITE, HORAIRES, fmtHeure } from '../data/site';
+import Logo from './Logo.astro';
+const annee = new Date().getFullYear();
+---
+<footer class="bg-encre text-papier pb-[84px] md:pb-0">
+  <div class="wrap grid gap-10 py-14 md:grid-cols-[1.3fr_1fr_1fr]">
+    <div>
+      <Logo />
+      <p class="mt-5 max-w-sm text-[#d6dbe6]">Voitures d'occasion toutes marques, contrôlées et préparées, à Groslay (Val-d'Oise). Clients de Montmorency, Saint-Brice, Sarcelles, Deuil-la-Barre, Montmagny, Domont et Ézanville.</p>
+    </div>
+    <address class="not-italic">
+      <h2 class="font-titre text-base mb-3">MON AUTO</h2>
+      <p>{SITE.adresse.rue}<br />{SITE.adresse.cp} {SITE.adresse.ville}</p>
+      <p class="mt-2"><a href={`tel:${SITE.telLien}`} class="font-semibold underline underline-offset-4 inline-block py-2">{SITE.telAffiche}</a></p>
+      <p><a href={SITE.itineraire} target="_blank" rel="noopener" class="underline underline-offset-4 inline-block py-2">Itinéraire Google Maps</a></p>
+    </address>
+    <div>
+      <h2 class="font-titre text-base mb-3">Horaires</h2>
+      <p>Lundi au samedi : {fmtHeure(HORAIRES[0].ouvre)}–{fmtHeure(HORAIRES[0].ferme)}<br />Dimanche : {fmtHeure(HORAIRES[6].ouvre)}–{fmtHeure(HORAIRES[6].ferme)}</p>
+      <p class="mt-4"><a href={SITE.leboncoin} target="_blank" rel="noopener" class="underline underline-offset-4 inline-block py-2">Toutes nos annonces sur Leboncoin</a></p>
+    </div>
+  </div>
+  <div class="border-t border-[#2c3c5e]">
+    <div class="wrap flex flex-wrap gap-x-6 gap-y-2 py-5 text-[0.88rem] text-[#c3cad8]">
+      <span class="py-2">© {annee} MON AUTO, SARL, SIREN {SITE.siren}</span>
+      <a href="/mentions-legales/" class="underline underline-offset-4 py-2">Mentions légales</a>
+      <a href="/confidentialite/" class="underline underline-offset-4 py-2">Confidentialité</a>
+    </div>
+  </div>
+</footer>

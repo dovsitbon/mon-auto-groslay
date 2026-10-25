@@ -1,0 +1,14 @@
+---
+// Pastille Ouvert / Fermé. Le texte est calculé en JS (fuseau Europe/Paris) dans Base.astro.
+interface Props { class?: string }
+const { class: cls = '' } = Astro.props;
+---
+<span data-statut class={`statut inline-flex items-center gap-2 ${cls}`}>
+  <span class="pastille" aria-hidden="true"></span>
+  <span data-statut-texte>Ouvert 7j/7</span>
+</span>
+<style>
+  .pastille { width: .6rem; height: .6rem; border-radius: 50%; background: currentColor; opacity: .55; flex: none; }
+  [data-ouvert='oui'] .pastille { background: #4fbf7f; opacity: 1; box-shadow: 0 0 0 3px rgb(79 191 127 / .25); }
+  [data-ouvert='non'] .pastille { background: #e0a14a; opacity: 1; }
+</style>

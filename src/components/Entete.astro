@@ -1,0 +1,42 @@
+---
+import Logo from './Logo.astro';
+import { SITE } from '../data/site';
+const liens = [
+  { href: '/vehicules/', label: 'Nos véhicules' },
+  { href: '/#pourquoi', label: 'Pourquoi MON AUTO' },
+  { href: '/#premier-achat', label: 'Premier achat' },
+  { href: '/#avis', label: 'Avis' },
+  { href: '/#infos', label: 'Horaires & accès' },
+];
+const path = Astro.url.pathname;
+---
+<header class="border-b border-regle">
+  <div class="wrap flex items-center justify-between gap-4 py-3">
+    <a href="/" class="no-underline min-h-[44px] flex items-center" aria-label="MON AUTO, accueil"><Logo /></a>
+    <nav aria-label="Navigation principale" class="hidden lg:block">
+      <ul class="flex items-center gap-1">
+        {liens.map((l) => (
+          <li><a href={l.href} class="nav-lien" aria-current={path.startsWith('/vehicules') && l.href === '/vehicules/' ? 'page' : undefined}>{l.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+    <a href={`tel:${SITE.telLien}`} class="btn btn-plein hidden lg:inline-flex !min-h-[44px] !py-2">Appeler</a>
+    <details class="lg:hidden menu relative">
+      <summary class="btn btn-ligne !min-h-[44px] !py-2 list-none cursor-pointer">Menu</summary>
+      <ul class="absolute right-0 top-[calc(100%+8px)] z-40 w-64 bg-papier border-2 border-encre rounded-[4px] p-2">
+        {liens.map((l) => (<li><a href={l.href} class="block px-3 py-3 no-underline font-semibold hover:bg-sable rounded-[2px]">{l.label}</a></li>))}
+      </ul>
+    </details>
+  </div>
+</header>
+<style>
+  .nav-lien { display: inline-flex; align-items: center; min-height: 44px; padding: 0 .75rem; text-decoration: none; font-weight: 600; font-size: .97rem; text-underline-offset: 6px; }
+  .nav-lien:hover, .nav-lien[aria-current='page'] { text-decoration: underline; text-decoration-thickness: 2px; text-decoration-color: var(--color-verifie); }
+  .menu summary::-webkit-details-marker { display: none; }
+</style>
+<script>
+  // Ferme le menu mobile après un clic sur un lien d'ancre.
+  document.querySelectorAll('details.menu a').forEach((a) =>
+    a.addEventListener('click', () => a.closest('details')?.removeAttribute('open')),
+  );
+</script>

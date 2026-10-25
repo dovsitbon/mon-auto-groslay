@@ -1,0 +1,28 @@
+---
+import PageTexte from '../components/PageTexte.astro';
+import { SITE } from '../data/site';
+---
+<PageTexte title="Mentions légales | MON AUTO Groslay" description="Mentions légales du site de MON AUTO, vente de voitures d'occasion au 37 route de Calais, 95410 Groslay : éditeur, hébergeur, propriété intellectuelle." h1="Mentions légales">
+  <h2>Éditeur du site</h2>
+  <p>MON AUTO, société à responsabilité limitée (SARL)<br />
+  SIREN : {SITE.siren}<br />
+  SIRET : <span class="ac">[À CONFIRMER]</span><br />
+  RCS : <span class="ac">[À CONFIRMER]</span> · Capital social : <span class="ac">[À CONFIRMER]</span><br />
+  N° TVA intracommunautaire : <span class="ac">[À CONFIRMER]</span><br />
+  Adresse : {SITE.adresse.rue}, {SITE.adresse.cp} {SITE.adresse.ville} (siège social <span class="ac">[À CONFIRMER]</span>)<br />
+  Téléphone : <a href={`tel:${SITE.telLien}`}>{SITE.telAffiche}</a><br />
+  E-mail : <span class="ac">[À CONFIRMER]</span></p>
+  <p>Directeur de la publication : <span class="ac">[À CONFIRMER]</span></p>
+
+  <h2>Hébergeur</h2>
+  <p>Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis — <a href="https://vercel.com" target="_blank" rel="noopener">vercel.com</a></p>
+
+  <h2>Propriété intellectuelle</h2>
+  <p>Les textes, photos et éléments graphiques de ce site appartiennent à MON AUTO, sauf mention contraire. Toute reproduction sans autorisation est interdite.</p>
+
+  <h2>Annonces</h2>
+  <p>Les informations des fiches véhicules (année, kilométrage, prix, disponibilité) sont données à titre indicatif et peuvent changer. Seules les informations confirmées sur place ou au téléphone font foi.</p>
+
+  <h2>Données personnelles</h2>
+  <p>Voir la <a href="/confidentialite/">politique de confidentialité</a>.</p>
+</PageTexte>

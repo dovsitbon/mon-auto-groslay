@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site';
+---
+<Base title="Page introuvable | MON AUTO Groslay" description="Cette page n'existe pas ou plus. Retrouvez le stock de voitures d'occasion de MON AUTO à Groslay." noindex>
+  <section class="wrap py-20 md:py-28 max-w-3xl">
+    <p class="font-titre font-bold text-[6rem] leading-none tracking-[-0.05em]">404</p>
+    <h1 class="mt-4 text-[2rem] md:text-[2.6rem]">Cette page n'existe pas, ou la voiture est déjà vendue</h1>
+    <p class="mt-5">Le stock change souvent. Regardez les voitures en ce moment au garage, ou appelez-nous.</p>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <a href="/vehicules/" class="btn btn-plein">Voir le stock</a>
+      <a href={`tel:${SITE.telLien}`} class="btn btn-ligne">Appeler le {SITE.telAffiche}</a>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,106 @@
+---
+import Base from '../../layouts/Base.astro';
+import FicheCarnet from '../../components/FicheCarnet.astro';
+import { SITE } from '../../data/site';
+import { VEHICULES, titre } from '../../data/vehicules';
+
+const uniq = (arr: (string | null)[]) => [...new Set(arr.filter((x): x is string => !!x))].sort((a, b) => a.localeCompare(b, 'fr'));
+const marques = uniq(VEHICULES.map((v) => v.marque));
+const carburants = uniq(VEHICULES.map((v) => v.carburant));
+const boites = uniq(VEHICULES.map((v) => v.boite));
+const paliers = [3000, 5000, 7000, 10000, 15000];
+
+const listeLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Véhicules d’occasion en vente chez MON AUTO, Groslay',
+  itemListElement: VEHICULES.map((v, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: titre(v),
+    url: new URL(`/vehicules/${v.slug}/`, Astro.site).href,
+  })),
+};
+---
+<Base
+  title="Voitures d'occasion en stock à Groslay | MON AUTO"
+  description="Le stock de MON AUTO à Groslay : voitures d'occasion toutes marques, citadines et petits budgets, essence et diesel. Filtrez par marque, prix, carburant et boîte."
+  jsonld={[listeLd]}
+>
+  <section class="wrap pt-10 pb-8 md:pt-14">
+    <nav aria-label="Fil d'Ariane" class="text-[0.9rem] text-encre-2 mb-5"><a href="/" class="underline underline-offset-4">Accueil</a> / Nos véhicules</nav>
+    <h1 class="text-[2.4rem] md:text-[3.4rem] max-w-[18ch]">Nos voitures d'occasion en stock</h1>
+    <p class="mt-5 max-w-[60ch]">Toutes marques, surtout des citadines et des petits budgets. Chaque fiche se lit comme un carnet : année, kilométrage, carburant, boîte, prix. Une voiture vous intéresse ? Appelez le <a href={`tel:${SITE.telLien}`} class="font-semibold underline underline-offset-4">{SITE.telAffiche}</a>.</p>
+  </section>
+
+  <section class="border-y-2 border-encre bg-sable-fonce" aria-label="Liste des véhicules">
+    <div class="wrap py-10 md:py-14">
+      <form id="filtres" class="filtres grid gap-4 sm:grid-cols-2 lg:grid-cols-[repeat(4,1fr)_auto] items-end bg-papier border-2 border-encre p-4 md:p-5 mb-10" aria-label="Filtrer les véhicules">
+        <label>Marque
+          <select name="marque"><option value="">Toutes</option>{marques.map((m) => <option>{m}</option>)}</select>
+        </label>
+        <label>Prix maximum
+          <select name="prix"><option value="">Pas de limite</option>{paliers.map((p) => <option value={p}>{new Intl.NumberFormat('fr-FR').format(p)} €</option>)}</select>
+        </label>
+        <label>Carburant
+          <select name="carburant"><option value="">Tous</option>{carburants.map((c) => <option>{c}</option>)}</select>
+        </label>
+        <label>Boîte
+          <select name="boite"><option value="">Toutes</option>{boites.map((b) => <option>{b}</option>)}</select>
+        </label>
+        <button type="reset" class="btn btn-ligne">Effacer</button>
+      </form>
+      <p id="compte" class="mb-6 font-semibold" aria-live="polite">{VEHICULES.length} véhicules</p>
+      <div id="liste" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {VEHICULES.map((v, i) => <FicheCarnet v={v} numero={i + 1} niveau="h2" eager={i === 0} />)}
+      </div>
+      <div id="vide" hidden class="bg-papier border-2 border-encre p-6 max-w-xl">
+        <p class="font-titre font-semibold text-[1.2rem]">Aucune voiture ne correspond à ces filtres.</p>
+        <p class="mt-2">Élargissez la recherche, ou appelez-nous : le stock change souvent et tout n'est pas encore en ligne.</p>
+        <a href={`tel:${SITE.telLien}`} class="btn btn-plein mt-4">Appeler le {SITE.telAffiche}</a>
+      </div>
+      <p class="mt-10 max-w-[60ch] text-encre-2">Les véhicules dont le prix n'est pas encore indiqué restent affichés quel que soit le prix maximum choisi. Voir aussi <a href={SITE.leboncoin} target="_blank" rel="noopener" class="underline underline-offset-4">notre boutique Leboncoin</a>.</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .filtres label { display: flex; flex-direction: column; gap: .35rem; font-weight: 600; font-size: .92rem; }
+  .filtres select { min-height: 48px; padding: 0 .75rem; border: 2px solid var(--color-encre); border-radius: 3px; background: var(--color-papier); font: inherit; font-weight: 400; font-size: 1rem; color: var(--color-encre); }
+</style>
+
+<script>
+  const form = document.getElementById('filtres') as HTMLFormElement;
+  const fiches = [...document.querySelectorAll<HTMLElement>('#liste .fiche')];
+  const compte = document.getElementById('compte')!;
+  const vide = document.getElementById('vide')!;
+  const appliquer = () => {
+    const f = new FormData(form);
+    const marque = f.get('marque'), carburant = f.get('carburant'), boite = f.get('boite');
+    const prix = Number(f.get('prix')) || Infinity;
+    let n = 0;
+    fiches.forEach((el) => {
+      const d = el.dataset;
+      const p = d.prix ? Number(d.prix) : null;
+      const ok = (!marque || d.marque === marque) && (!carburant || d.carburant === carburant) && (!boite || d.boite === boite) && (p === null || p <= prix);
+      el.hidden = !ok;
+      if (ok) n++;
+    });
+    compte.textContent = n > 1 ? `${n} véhicules` : `${n} véhicule`;
+    vide.hidden = n > 0;
+  };
+  // Les filtres sont gardés dans l'URL (?marque=…&prix=…) pour pouvoir partager une recherche.
+  const versUrl = () => {
+    const p = new URLSearchParams();
+    new FormData(form).forEach((v, k) => { if (v) p.set(k, String(v)); });
+    const q = p.toString();
+    history.replaceState(null, '', q ? `?${q}` : location.pathname);
+  };
+  new URLSearchParams(location.search).forEach((v, k) => {
+    const el = form.elements.namedItem(k);
+    if (el instanceof HTMLSelectElement && [...el.options].some((o) => o.value === v)) el.value = v;
+  });
+  appliquer();
+  form.addEventListener('change', () => { appliquer(); versUrl(); });
+  form.addEventListener('reset', () => setTimeout(() => { appliquer(); versUrl(); }));
+</script>

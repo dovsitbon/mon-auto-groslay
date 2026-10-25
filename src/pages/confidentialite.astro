@@ -1,0 +1,21 @@
+---
+import PageTexte from '../components/PageTexte.astro';
+import { SITE } from '../data/site';
+---
+<PageTexte title="Politique de confidentialité | MON AUTO Groslay" description="Politique de confidentialité du site MON AUTO à Groslay : pas de cookie, pas de mesure d'audience, aucune donnée collectée par formulaire." h1="Politique de confidentialité">
+  <h2>Ce que le site collecte</h2>
+  <p>Rien. Le site n'a ni formulaire, ni compte client, ni outil de mesure d'audience, ni cookie publicitaire. C'est pour ça qu'il n'y a pas de bandeau cookies.</p>
+
+  <h2>Appels et SMS</h2>
+  <p>Les boutons « Appeler » et « Envoyer un SMS » ouvrent l'application de votre téléphone. Le site ne voit pas votre numéro. Les échanges qui suivent se font directement avec MON AUTO et servent uniquement à répondre à votre demande sur un véhicule.</p>
+
+  <h2>Carte Google Maps</h2>
+  <p>La carte n'est chargée que si vous cliquez sur « Afficher la carte Google ». Google peut alors déposer ses propres cookies, selon sa <a href="https://policies.google.com/privacy?hl=fr" target="_blank" rel="noopener">politique de confidentialité</a>. Le lien « Itinéraire » ouvre Google Maps dans un nouvel onglet.</p>
+
+  <h2>Hébergement</h2>
+  <p>Le site est hébergé par Vercel Inc. (États-Unis), qui peut traiter des données techniques de connexion (adresse IP, navigateur) pour faire fonctionner et sécuriser le service.</p>
+
+  <h2>Vos droits</h2>
+  <p>Vous pouvez demander l'accès, la rectification ou la suppression de vos données en contactant MON AUTO au <a href={`tel:${SITE.telLien}`}>{SITE.telAffiche}</a> ou par courrier au {SITE.adresse.rue}, {SITE.adresse.cp} {SITE.adresse.ville}. Vous pouvez aussi saisir la <a href="https://www.cnil.fr" target="_blank" rel="noopener">CNIL</a>.</p>
+  <p>Responsable du traitement : MON AUTO, SARL, SIREN {SITE.siren}. Contact e-mail : <span class="ac">[À CONFIRMER]</span></p>
+</PageTexte>

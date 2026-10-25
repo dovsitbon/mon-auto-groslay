@@ -1,0 +1,17 @@
+---
+import { SITE } from '../data/site';
+import Statut from './Statut.astro';
+---
+<div class="bg-encre text-papier text-[0.92rem]">
+  <div class="wrap flex flex-wrap items-center justify-between gap-x-6 gap-y-1 py-2">
+    <a href="/#avis" class="flex items-center gap-2 no-underline hover:underline underline-offset-4 min-h-[32px]">
+      <span class="font-titre font-bold text-[1.05rem]">{SITE.note}</span>
+      <span aria-hidden="true" class="tracking-[0.1em] text-[#f3c969]">★★★★★</span>
+      <span>sur Google — {SITE.nbAvis} avis</span>
+    </a>
+    <div class="flex items-center gap-5">
+      <Statut class="hidden sm:inline-flex" />
+      <a href={`tel:${SITE.telLien}`} class="hidden md:inline font-semibold no-underline hover:underline underline-offset-4">{SITE.telAffiche}</a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+# MON AUTO (Groslay)
+
+> Garage de vente de voitures d'occasion toutes marques (essence, diesel ; citadines et petits budgets) au 37 route de Calais, 95410 Groslay (Val-d'Oise). SARL, SIREN 991 260 142. Note Google 5,0/5 sur 32 avis.
+
+- Téléphone : 06 85 96 94 77
+- Horaires : lundi au samedi 09h30–19h00 ; dimanche 10h00–17h00 (ouvert 7j/7)
+- Sur place : parking, accès fauteuil roulant, paiement par carte bancaire
+- Clients des communes voisines : Montmorency, Saint-Brice-sous-Forêt, Sarcelles, Deuil-la-Barre, Montmagny, Domont, Ézanville
+
+## Pages
+- [Accueil](https://mon-auto-groslay.vercel.app/) : présentation, véhicules mis en avant, services, avis, horaires
+- [Nos véhicules](https://mon-auto-groslay.vercel.app/vehicules/) : stock filtrable, une fiche par voiture
+- [Boutique Leboncoin](https://www.leboncoin.fr/boutique/7226070/mon_auto.htm) : toutes les annonces

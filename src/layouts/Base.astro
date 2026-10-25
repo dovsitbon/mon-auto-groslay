@@ -1,0 +1,120 @@
+---
+import '../styles/global.css';
+import BandeauConfiance from '../components/BandeauConfiance.astro';
+import Entete from '../components/Entete.astro';
+import Pied from '../components/Pied.astro';
+import BarreMobile from '../components/BarreMobile.astro';
+import { SITE, HORAIRES } from '../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  jsonld?: object[];
+  noindex?: boolean;
+}
+const { title, description, jsonld = [], noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const og = new URL('/og.png', Astro.site);
+
+const dealer = {
+  '@context': 'https://schema.org',
+  '@type': 'AutoDealer',
+  '@id': new URL('/#garage', Astro.site).href,
+  name: SITE.nom,
+  url: new URL('/', Astro.site).href,
+  telephone: SITE.telLien,
+  image: og.href,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: SITE.adresse.rue,
+    postalCode: SITE.adresse.cp,
+    addressLocality: SITE.adresse.ville,
+    addressRegion: "Val-d'Oise",
+    addressCountry: SITE.adresse.pays,
+  },
+  areaServed: [SITE.adresse.ville, ...SITE.voisines].map((n) => ({ '@type': 'City', name: n })),
+  openingHoursSpecification: [
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'], opens: '09:30', closes: '19:00' },
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Sunday', opens: '10:00', closes: '17:00' },
+  ],
+  amenityFeature: [
+    { '@type': 'LocationFeatureSpecification', name: 'Parking sur place', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Accessible en fauteuil roulant', value: true },
+  ],
+  paymentAccepted: 'Carte bancaire',
+  sameAs: [SITE.leboncoin],
+};
+---
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>document.documentElement.classList.add('js')</script>
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#15233f" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:site_name" content="MON AUTO Groslay" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={og} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <script type="application/ld+json" set:html={JSON.stringify(dealer)} />
+    {jsonld.map((j) => <script type="application/ld+json" set:html={JSON.stringify(j)} />)}
+  </head>
+  <body class="min-h-dvh flex flex-col">
+    <a href="#contenu" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:bg-papier focus:px-4 focus:py-3 focus:font-semibold">Aller au contenu</a>
+    <BandeauConfiance />
+    <Entete />
+    <main id="contenu" class="flex-1">
+      <slot />
+    </main>
+    <Pied />
+    <BarreMobile />
+    <script>
+      // Un seul moment animé : le tampon « CONTRÔLÉ » se pose quand la fiche arrive à l'écran.
+      const tampons = document.querySelectorAll('.fiche .tampon');
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entrees) => {
+          entrees.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('pose'); io.unobserve(e.target); } });
+        }, { threshold: 0.6 });
+        tampons.forEach((t) => io.observe(t));
+      } else tampons.forEach((t) => t.classList.add('pose'));
+    </script>
+    <script is:inline define:vars={{ horaires: HORAIRES }}>
+      (function () {
+        try {
+          var parts = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Paris', weekday: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date());
+          var get = function (t) { return (parts.find(function (p) { return p.type === t; }) || {}).value; };
+          var jours = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+          var j = jours[get('weekday')];
+          var min = parseInt(get('hour'), 10) * 60 + parseInt(get('minute'), 10);
+          var toMin = function (h) { var a = h.split(':'); return +a[0] * 60 + +a[1]; };
+          var fmt = function (h) { return h.replace(':', 'h'); };
+          var auj = horaires.find(function (h) { return h.jour === j; });
+          var ouvert = auj && min >= toMin(auj.ouvre) && min < toMin(auj.ferme);
+          var texte;
+          if (ouvert) texte = 'Ouvert maintenant, jusqu’à ' + fmt(auj.ferme);
+          else if (auj && min < toMin(auj.ouvre)) texte = 'Fermé, ouvre à ' + fmt(auj.ouvre);
+          else { var dem = horaires.find(function (h) { return h.jour === (j + 1) % 7; }); texte = 'Fermé, ouvre demain à ' + fmt(dem.ouvre); }
+          document.querySelectorAll('[data-statut]').forEach(function (el) {
+            el.dataset.ouvert = ouvert ? 'oui' : 'non';
+            var t = el.querySelector('[data-statut-texte]');
+            if (t) t.textContent = texte;
+          });
+          document.querySelectorAll('[data-jour="' + j + '"]').forEach(function (el) { el.setAttribute('aria-current', 'date'); });
+        } catch (e) {}
+      })();
+    </script>
+  </body>
+</html>

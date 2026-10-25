@@ -1,0 +1,50 @@
+[
+  {
+    "slug": "ford-fiesta-1-4-tdci",
+    "exemple": "[EXEMPLE À REMPLACER]",
+    "marque": "Ford",
+    "modele": "Fiesta",
+    "version": "1.4 TDCi",
+    "annee": null,
+    "km": null,
+    "carburant": "Diesel",
+    "boite": null,
+    "puissance": null,
+    "prix": null,
+    "photos": [],
+    "statut": "disponible",
+    "description": "Annonce d'exemple reprise de la boutique Leboncoin. Année, kilométrage, boîte, puissance et prix [À CONFIRMER]."
+  },
+  {
+    "slug": "volkswagen-fox-1-2",
+    "exemple": "[EXEMPLE À REMPLACER]",
+    "marque": "Volkswagen",
+    "modele": "Fox",
+    "version": "1.2",
+    "annee": null,
+    "km": null,
+    "carburant": "Essence",
+    "boite": null,
+    "puissance": null,
+    "prix": null,
+    "photos": [],
+    "statut": "disponible",
+    "description": "Annonce d'exemple reprise de la boutique Leboncoin. Année, kilométrage, boîte, puissance et prix [À CONFIRMER]."
+  },
+  {
+    "slug": "renault-twingo",
+    "exemple": "[EXEMPLE À REMPLACER]",
+    "marque": "Renault",
+    "modele": "Twingo",
+    "version": null,
+    "annee": null,
+    "km": null,
+    "carburant": null,
+    "boite": null,
+    "puissance": null,
+    "prix": null,
+    "photos": [],
+    "statut": "disponible",
+    "description": "Fiche d'exemple. Version, année, kilométrage, carburant, boîte, puissance et prix [À CONFIRMER]."
+  }
+]

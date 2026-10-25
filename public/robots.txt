@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mon-auto-groslay.vercel.app/sitemap-index.xml

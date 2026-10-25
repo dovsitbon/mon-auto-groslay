@@ -1,0 +1,238 @@
+---
+import Base from '../layouts/Base.astro';
+import FicheCarnet from '../components/FicheCarnet.astro';
+import Horaires from '../components/Horaires.astro';
+import CarteFacade from '../components/CarteFacade.astro';
+import Statut from '../components/Statut.astro';
+import Coche from '../components/Coche.astro';
+import { SITE, AVIS } from '../data/site';
+import { VEHICULES } from '../data/vehicules';
+
+const enAvant = VEHICULES.filter((v) => v.statut !== 'vendu').slice(0, 3);
+
+const pourquoi = [
+  { t: 'Conforme à l’annonce', d: 'Ce qui est écrit dans l’annonce, c’est ce que vous trouvez sur le parking. Kilométrage, état, options : vous vérifiez sur place.' },
+  { t: 'Préparée et nettoyée', d: 'Chaque voiture est préparée et nettoyée avant de partir. Vous repartez avec une voiture propre, intérieur compris.' },
+  { t: 'Des réponses claires', d: 'Une question sur l’entretien, l’historique, les papiers ? On répond franchement, sur place ou au téléphone.' },
+  { t: 'Premier achat accompagné', d: 'Jamais acheté de voiture ? On prend le temps de tout expliquer, de l’essai jusqu’aux papiers.' },
+];
+
+const etapes = [
+  { t: 'L’essai', d: 'Vous venez voir la voiture au 37 route de Calais et vous l’essayez.', ac: 'conditions de l’essai' },
+  { t: 'Les vérifications', d: 'On regarde la voiture ensemble : état, entretien, documents.', ac: 'liste des points vérifiés' },
+  { t: 'La carte grise', d: 'Les démarches d’immatriculation pour mettre la voiture à votre nom.', ac: 'prise en charge par le garage ?' },
+  { t: 'La livraison', d: 'Vous repartez avec la voiture, ou elle vous est livrée.', ac: 'modalités de livraison' },
+];
+
+const services = [
+  { s: 'Vente sur place, toutes marques', ok: true },
+  { s: 'Préparation et nettoyage avant livraison', ok: true },
+  { s: 'Parking sur place', ok: true },
+  { s: 'Accessible en fauteuil roulant', ok: true },
+  { s: 'Paiement par carte bancaire', ok: true },
+  { s: 'Livraison du véhicule', ok: false, note: 'modalités' },
+  { s: 'Reprise de votre véhicule', ok: false },
+  { s: 'Financement', ok: false },
+  { s: 'Garantie', ok: false, note: 'durée et conditions' },
+];
+
+const faq = [
+  { q: 'MON AUTO est-il ouvert le dimanche ?', r: 'Oui. Le garage est ouvert 7 jours sur 7 : du lundi au samedi de 9h30 à 19h00, et le dimanche de 10h00 à 17h00.' },
+  { q: 'Où se trouve MON AUTO ?', r: 'Au 37 route de Calais, 95410 Groslay (Val-d’Oise), avec un parking sur place. Le garage est accessible en fauteuil roulant.' },
+  { q: 'Quelles voitures vend MON AUTO ?', r: 'Des voitures d’occasion toutes marques, essence et diesel, surtout des citadines et des petits budgets : Ford Fiesta, Volkswagen Fox, Toyota, Renault Twingo, Nissan…' },
+  { q: 'Comment réserver un essai ?', r: `Appelez le ${SITE.telAffiche}. Le stock est aussi visible sur notre boutique Leboncoin.` },
+];
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.r } })),
+};
+---
+<Base
+  title="MON AUTO Groslay : voitures d'occasion contrôlées et préparées"
+  description="Voitures d'occasion toutes marques à Groslay (95), route de Calais : citadines et petits budgets préparés et nettoyés. 5,0 sur Google, 32 avis. Ouvert 7j/7."
+  jsonld={[faqLd]}
+>
+  <!-- Ouverture -->
+  <section class="wrap grid gap-10 pt-10 pb-16 md:pt-16 md:pb-24 lg:grid-cols-[1.35fr_1fr] lg:gap-16 items-center">
+    <div>
+      <p class="text-encre-2 font-semibold mb-5">{SITE.adresse.rue}, {SITE.adresse.ville}</p>
+      <h1 class="text-[2.5rem] sm:text-[3.4rem] lg:text-[4.1rem] max-w-[14ch]">Voitures d'occasion contrôlées et préparées, à Groslay</h1>
+      <p class="mt-6 max-w-[52ch] text-[1.12rem]">Citadines et petits budgets, essence ou diesel, toutes marques. On vous dit tout sur la voiture avant que vous ne signiez, et elle part propre.</p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href={`tel:${SITE.telLien}`} class="btn btn-plein">Appeler le {SITE.telAffiche}</a>
+        <a href="/vehicules/" class="btn btn-ligne">Voir le stock</a>
+      </div>
+      <p class="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-[0.95rem] text-encre-2">
+        <Statut class="text-encre font-semibold" />
+        <span>Parking sur place</span>
+      </p>
+    </div>
+
+    <figure class="ticket relative px-7 pt-10 pb-9 rotate-[1.2deg] max-w-[26rem] w-full justify-self-center lg:justify-self-end">
+      <p class="text-[0.9rem] text-encre-2">Note Google</p>
+      <p class="font-titre font-bold leading-[0.8] tracking-[-0.06em] text-[9rem] sm:text-[11rem] -ml-1"><span aria-hidden="true">5,0</span><span class="sr-only">5,0 sur 5</span></p>
+      <p class="mt-3 flex items-baseline justify-between border-t-2 border-dashed border-regle pt-3">
+        <span aria-hidden="true" class="text-[1.4rem] tracking-[0.12em] text-[#8a6210]">★★★★★</span>
+        <span class="font-titre font-semibold">{SITE.nbAvis} avis</span>
+      </p>
+      <blockquote class="mt-5 text-[0.98rem] leading-snug">
+        <p>« {AVIS[1]} »</p>
+        <footer class="mt-2 text-[0.85rem] text-encre-2">Avis Google</footer>
+      </blockquote>
+      <span class="tampon absolute right-5 top-6">VÉRIFIÉ</span>
+    </figure>
+  </section>
+
+  <!-- Fiches carnet -->
+  <section class="border-y-2 border-encre bg-sable-fonce" aria-labelledby="t-stock">
+    <div class="wrap py-16 md:py-20">
+      <div class="flex flex-wrap items-end justify-between gap-4 mb-10">
+        <h2 id="t-stock" class="text-[2rem] md:text-[2.6rem]">En ce moment au garage</h2>
+        <a href="/vehicules/" class="font-semibold underline underline-offset-4 decoration-2 py-2">Tout le stock ({VEHICULES.length} véhicules)</a>
+      </div>
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {enAvant.map((v, i) => <FicheCarnet v={v} numero={i + 1} />)}
+      </div>
+      <p class="mt-8 max-w-[60ch] text-encre-2">Le stock bouge vite. Pour savoir si une voiture est toujours là, le plus simple est d'appeler. Toutes nos annonces sont aussi sur <a href={SITE.leboncoin} target="_blank" rel="noopener" class="underline underline-offset-4">notre boutique Leboncoin</a>.</p>
+    </div>
+  </section>
+
+  <!-- Pourquoi -->
+  <section id="pourquoi" class="wrap py-16 md:py-24 grid gap-10 lg:grid-cols-[1fr_1.5fr] lg:gap-16" aria-labelledby="t-pourquoi">
+    <div class="lg:sticky lg:top-8 self-start">
+      <h2 id="t-pourquoi" class="text-[2rem] md:text-[2.6rem]">Pourquoi acheter chez MON AUTO</h2>
+      <p class="mt-5 max-w-[42ch]">Un garage de quartier, pas un concessionnaire. Ce que nos clients retiennent tient en quatre lignes.</p>
+    </div>
+    <ul class="bg-papier border-2 border-encre rounded-[3px] px-5 md:px-8 py-2">
+      {pourquoi.map((p) => (
+        <li class="flex gap-4 py-5 border-b border-regle last:border-b-0">
+          <Coche class="text-verifie mt-0.5 flex-none" />
+          <div>
+            <h3 class="text-[1.3rem]">{p.t}</h3>
+            <p class="mt-1.5 max-w-[56ch]">{p.d}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- Premier achat -->
+  <section id="premier-achat" class="bg-encre text-papier" aria-labelledby="t-premier">
+    <div class="wrap py-16 md:py-24">
+      <h2 id="t-premier" class="text-[2rem] md:text-[2.6rem] max-w-[20ch]">Premier achat ? On vous accompagne</h2>
+      <p class="mt-5 max-w-[56ch] text-[#d6dbe6]">« J'avais un peu peur car c'était la première voiture que j'achetais… » C'est ce qu'on entend souvent. Voici comment ça se passe, étape par étape.</p>
+      <ol class="mt-12 grid md:grid-cols-4">
+        {etapes.map((e, i) => (
+          <li class="etape relative pl-14 md:pl-0 md:pt-16 pb-10 md:pb-0 md:pr-6">
+            <span class="num font-titre font-bold" aria-hidden="true">{i + 1}</span>
+            <h3 class="text-[1.3rem]">{e.t}</h3>
+            <p class="mt-2 text-[#d6dbe6]">{e.d}</p>
+            <p class="mt-3"><span class="ac">[À CONFIRMER : {e.ac}]</span></p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services" class="wrap py-16 md:py-24 grid gap-10 lg:grid-cols-[1fr_1.5fr] lg:gap-16" aria-labelledby="t-services">
+    <div>
+      <h2 id="t-services" class="text-[2rem] md:text-[2.6rem]">Services</h2>
+      <p class="mt-5 max-w-[42ch]">Ce qui est déjà acquis est coché. Le reste se précise : demandez-nous au téléphone.</p>
+    </div>
+    <table class="services w-full bg-papier border-2 border-encre">
+      <caption class="sr-only">Services proposés par MON AUTO</caption>
+      <thead><tr><th scope="col" class="text-left">Service</th><th scope="col" class="text-right">Chez MON AUTO</th></tr></thead>
+      <tbody>
+        {services.map((s) => (
+          <tr>
+            <th scope="row" class="text-left font-normal">{s.s}</th>
+            <td class="text-right w-[44%]">
+              {s.ok ? (
+                <span class="inline-flex items-center gap-2 font-semibold text-verifie"><Coche class="w-6 h-6" />Oui</span>
+              ) : (
+                <span class="ac">[À CONFIRMER{s.note ? ` : ${s.note}` : ''}]</span>
+              )}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Avis -->
+  <section id="avis" class="border-t-2 border-encre bg-sable-fonce" aria-labelledby="t-avis">
+    <div class="wrap py-16 md:py-24">
+      <div class="flex flex-wrap items-end gap-x-10 gap-y-4 mb-12">
+        <h2 id="t-avis" class="text-[2rem] md:text-[2.6rem]">Ce que disent les clients</h2>
+        <p class="font-titre"><span class="font-bold text-[2.6rem] tracking-[-0.04em]">5,0/5</span> <span class="font-semibold ml-1">sur {SITE.nbAvis} avis Google</span></p>
+      </div>
+      <ul class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {AVIS.map((a, i) => (
+          <li class:list={['ticket px-6 pt-8 pb-7', i % 2 ? 'rotate-[0.8deg]' : '-rotate-[0.6deg]', i === 0 && 'lg:row-span-2 lg:flex lg:flex-col lg:justify-center']}>
+            <blockquote>
+              <p class:list={['leading-snug', i === 0 ? 'text-[1.35rem] font-titre font-semibold' : 'text-[1.08rem]']}>« {a} »</p>
+              <footer class="mt-4 flex items-center justify-between text-[0.88rem] text-encre-2 border-t-2 border-dashed border-regle pt-3">
+                <span>Avis Google</span><span role="img" aria-label="5 étoiles sur 5" class="text-[#8a6210]">★★★★★</span>
+              </footer>
+            </blockquote>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Infos pratiques -->
+  <section id="infos" class="wrap py-16 md:py-24" aria-labelledby="t-infos">
+    <h2 id="t-infos" class="text-[2rem] md:text-[2.6rem]">Horaires & accès</h2>
+    <p class="mt-4 max-w-[62ch]">Ouvert 7 jours sur 7, sur la route de Calais à Groslay. On reçoit des clients de {SITE.voisines.slice(0, -1).join(', ')} et {SITE.voisines.at(-1)}.</p>
+    <div class="mt-10 grid gap-8 grid-cols-1 lg:grid-cols-[1fr_1fr_1.3fr]">
+      <div>
+        <h3 class="text-[1.2rem] mb-3">Horaires</h3>
+        <div class="bg-papier border-2 border-encre"><Horaires /></div>
+        <p class="mt-3"><Statut class="font-semibold" /></p>
+      </div>
+      <div>
+        <h3 class="text-[1.2rem] mb-3">Sur place</h3>
+        <address class="not-italic text-[1.15rem] font-titre font-semibold leading-snug">{SITE.adresse.rue}<br />{SITE.adresse.cp} {SITE.adresse.ville}</address>
+        <ul class="mt-5 space-y-3">
+          <li class="flex gap-3"><Coche class="w-6 h-6 text-verifie flex-none" />Parking sur place</li>
+          <li class="flex gap-3"><Coche class="w-6 h-6 text-verifie flex-none" />Accessible en fauteuil roulant</li>
+          <li class="flex gap-3"><Coche class="w-6 h-6 text-verifie flex-none" />Paiement par carte bancaire</li>
+        </ul>
+        <a href={`tel:${SITE.telLien}`} class="btn btn-plein mt-6">Appeler le {SITE.telAffiche}</a>
+      </div>
+      <CarteFacade />
+    </div>
+
+    <div class="mt-20 max-w-3xl">
+      <h2 class="text-[1.6rem] md:text-[2rem]">Questions fréquentes</h2>
+      <div class="mt-6 border-t-2 border-encre">
+        {faq.map((f) => (
+          <details class="faq border-b border-regle">
+            <summary class="flex justify-between gap-4 py-4 cursor-pointer font-titre font-semibold text-[1.08rem] min-h-[44px]">{f.q}<span aria-hidden="true" class="plus">+</span></summary>
+            <p class="pb-5 max-w-[62ch]">{f.r}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .etape .num { position: absolute; left: 0; top: 0; width: 2.75rem; height: 2.75rem; display: grid; place-items: center; border: 2px solid var(--color-papier); border-radius: 50%; background: var(--color-encre); z-index: 1; font-size: 1.15rem; }
+  .etape::before { content: ''; position: absolute; left: calc(1.375rem - 1px); top: 2.75rem; bottom: 0; border-left: 2px dashed #5a6a8a; }
+  .etape:last-child::before { display: none; }
+  @media (min-width: 768px) {
+    .etape::before { left: 2.75rem; right: 0; top: calc(1.375rem - 1px); bottom: auto; border-left: 0; border-top: 2px dashed #5a6a8a; }
+  }
+  .services th, .services td { padding: .85rem 1rem; border-bottom: 1px solid var(--color-regle); vertical-align: middle; }
+  .services thead th { font-family: var(--font-titre); font-weight: 600; font-size: .9rem; background: var(--color-encre); color: var(--color-papier); }
+  .services tbody tr:last-child > * { border-bottom: 0; }
+  .faq summary { list-style: none; align-items: center; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq .plus { font-size: 1.5rem; line-height: 1; transition: transform .2s; }
+  .faq[open] .plus { transform: rotate(45deg); }
+</style>

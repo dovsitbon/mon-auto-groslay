@@ -1,0 +1,55 @@
+---
+import type { Vehicule } from '../data/vehicules';
+import { titre, fmtPrix, AC } from '../data/vehicules';
+const nf = new Intl.NumberFormat('fr-FR');
+import PhotoVehicule from './PhotoVehicule.astro';
+
+interface Props { v: Vehicule; numero: number; niveau?: 'h2' | 'h3'; eager?: boolean }
+const { v, numero, niveau = 'h3', eager = false } = Astro.props;
+const H = niveau;
+const prix = fmtPrix(v);
+const cases: [string, string | null][] = [
+  ['Année', v.annee ? String(v.annee) : null],
+  ['Kilométrage', v.km == null ? null : `${nf.format(v.km)} km`],
+  ['Carburant', v.carburant],
+  ['Boîte', v.boite],
+];
+const statutTxt = { disponible: 'Disponible', réservé: 'Réservé', vendu: 'Vendu' }[v.statut];
+---
+<article class="fiche relative overflow-clip bg-papier border-2 border-encre rounded-[3px] flex flex-col"
+  data-marque={v.marque} data-prix={v.prix ?? ''} data-carburant={v.carburant ?? ''} data-boite={v.boite ?? ''}>
+  <div class="flex items-center justify-between gap-3 border-b-2 border-encre px-4 py-2 text-[0.85rem]">
+    <span class="font-titre font-semibold">Carnet n°{String(numero).padStart(2, '0')}</span>
+    <span class:list={['statut-v font-semibold', `s-${v.statut === 'réservé' ? 'reserve' : v.statut}`]}>{statutTxt}</span>
+  </div>
+  <PhotoVehicule v={v} eager={eager} />
+  <div class="p-4 pb-5 flex flex-col gap-4 flex-1">
+    {v.exemple && <p class="ac self-start">{v.exemple}</p>}
+    <H class="text-[1.45rem]"><a href={`/vehicules/${v.slug}/`} class="no-underline lien-fiche">{titre(v)}</a></H>
+    <dl class="cases grid grid-cols-2 border-t border-l border-regle text-[0.95rem]">
+      {cases.map(([k, x]) => <div><dt>{k}</dt><dd>{x ?? <span class="ac">{AC}</span>}</dd></div>)}
+    </dl>
+    <div class="mt-auto flex items-end justify-between gap-3">
+      <p class="leading-none">
+        <span class="block text-[0.85rem] text-encre-2 mb-1">Prix</span>
+        {prix ? <span class="font-titre font-bold text-[2.4rem] tracking-[-0.03em]">{prix}</span> : <span class="ac text-base">Prix {AC}</span>}
+      </p>
+      <span class="tampon" aria-label="Véhicule contrôlé">CONTRÔLÉ</span>
+    </div>
+  </div>
+</article>
+<style>
+  .cases > div { border-right: 1px solid var(--color-regle); border-bottom: 1px solid var(--color-regle); padding: .5rem .65rem; min-width: 0; }
+  .cases dt { font-size: .78rem; color: var(--color-encre-2); }
+  .cases dd { font-family: var(--font-titre); font-weight: 600; overflow-wrap: anywhere; }
+  .lien-fiche::after { content: ''; position: absolute; inset: 0; }
+  .fiche { transition: transform .2s ease, box-shadow .2s ease; }
+  .fiche:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--color-encre); }
+  .fiche:focus-within { box-shadow: 4px 4px 0 var(--color-verifie); }
+  .lien-fiche:focus-visible { outline: none; }
+  .lien-fiche:focus-visible::after { outline: 3px solid var(--color-verifie); outline-offset: 4px; }
+  .statut-v { padding: .1rem .5rem; border-radius: 2px; }
+  .s-disponible { color: var(--color-verifie); }
+  .s-reserve { background: #fff2b8; color: #5c4400; }
+  .s-vendu { background: var(--color-encre); color: var(--color-papier); }
+</style>

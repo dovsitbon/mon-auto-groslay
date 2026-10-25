@@ -1,0 +1,60 @@
+@import 'tailwindcss';
+@import '@fontsource/sora/600.css';
+@import '@fontsource/sora/700.css';
+@import '@fontsource-variable/public-sans';
+
+@theme {
+  --color-sable: #efe6d6;
+  --color-papier: #fbf7ef;
+  --color-encre: #15233f;
+  --color-encre-2: #4a5468;
+  --color-verifie: #1f6b43;
+  --color-regle: #cbbb9f;
+  --color-sable-fonce: #e3d6bf;
+  --font-titre: 'Sora', 'Trebuchet MS', sans-serif;
+  --font-texte: 'Public Sans Variable', 'Segoe UI', Arial, sans-serif;
+}
+
+@layer base {
+  html { background: var(--color-sable); color: var(--color-encre); -webkit-text-size-adjust: 100%; touch-action: manipulation; }
+  body { font-family: var(--font-texte); font-size: 1.0625rem; line-height: 1.6; overflow-x: clip; }
+  h1, h2, h3 { font-family: var(--font-titre); font-weight: 700; line-height: 1.08; letter-spacing: -0.02em; text-wrap: balance; }
+  p { text-wrap: pretty; }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--color-verifie); outline-offset: 3px; border-radius: 2px; }
+  ::selection { background: var(--color-encre); color: var(--color-papier); }
+}
+
+@layer components {
+  .wrap { width: 100%; max-width: 76rem; margin-inline: auto; padding-inline: 1.25rem; }
+  @media (min-width: 768px) { .wrap { padding-inline: 2rem; } }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: .55rem; min-height: 48px; padding: .7rem 1.25rem; font-family: var(--font-titre); font-weight: 600; font-size: 1rem; border: 2px solid var(--color-encre); border-radius: 4px; text-decoration: none; transition: background-color .15s, color .15s, transform .15s; }
+  .btn:active { transform: translateY(1px); }
+  .btn-plein { background: var(--color-encre); color: var(--color-papier); }
+  .btn-plein:hover { background: #22345a; }
+  .btn-ligne { background: transparent; color: var(--color-encre); }
+  .btn-ligne:hover { background: var(--color-papier); }
+
+  /* Papier réglé façon carnet */
+  .regle { background-color: var(--color-papier); background-image: repeating-linear-gradient(to bottom, transparent 0 calc(2.25rem - 1px), color-mix(in srgb, var(--color-regle) 55%, transparent) calc(2.25rem - 1px) 2.25rem); }
+
+  /* Tampon « contrôlé » */
+  .tampon { display: inline-block; font-family: var(--font-titre); font-weight: 700; font-size: .78rem; letter-spacing: .12em; color: var(--color-verifie); border: 2px solid currentColor; outline: 1px solid currentColor; outline-offset: 2px; padding: .2rem .55rem; border-radius: 3px; transform: rotate(-6deg); background: color-mix(in srgb, var(--color-papier) 80%, transparent); }
+
+  .ac { background: #fff2b8; color: #5c4400; font-size: .85em; font-weight: 600; padding: 0 .3em; border-radius: 2px; -webkit-box-decoration-break: clone; box-decoration-break: clone; overflow-wrap: break-word; }
+
+  .photo-vide { display: grid; place-items: end start; background: repeating-linear-gradient(135deg, #dccdb2 0 14px, #d6c6a9 14px 28px); color: var(--color-encre); }
+  .photo-vide span { background: var(--color-papier); font-size: .82rem; line-height: 1.35; padding: .4rem .6rem; margin: .6rem; border-left: 3px solid var(--color-encre); max-width: 85%; }
+
+  .ticket { background: var(--color-papier); --dent: 9px; -webkit-mask: radial-gradient(circle at 50% 0, transparent 5px, #000 5.5px) top / 14px var(--dent) repeat-x, radial-gradient(circle at 50% 100%, transparent 5px, #000 5.5px) bottom / 14px var(--dent) repeat-x, linear-gradient(#000 0 0) center / 100% calc(100% - 2 * var(--dent) + 1px) no-repeat; mask: radial-gradient(circle at 50% 0, transparent 5px, #000 5.5px) top / 14px var(--dent) repeat-x, radial-gradient(circle at 50% 100%, transparent 5px, #000 5.5px) bottom / 14px var(--dent) repeat-x, linear-gradient(#000 0 0) center / 100% calc(100% - 2 * var(--dent) + 1px) no-repeat; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .js .fiche .tampon { opacity: 0; transform: rotate(-6deg) scale(1.9); }
+  .js .fiche .tampon.pose { animation: tampon .38s cubic-bezier(.3, 1.4, .5, 1) .15s forwards; }
+  @keyframes tampon { to { opacity: 1; transform: rotate(-6deg) scale(1); } }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}

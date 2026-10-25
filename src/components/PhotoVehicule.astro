@@ -1,0 +1,21 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import type { Vehicule } from '../data/vehicules';
+import { titre } from '../data/vehicules';
+
+interface Props { v: Vehicule; index?: number; eager?: boolean; class?: string; legende?: string }
+const { v, index = 0, eager = false, class: cls = '', legende = 'Photo à prendre : la voiture de 3/4 avant, devant le garage, en lumière du jour.' } = Astro.props;
+
+// Les photos se déposent dans src/assets/vehicules/ et se référencent par leur nom de fichier dans vehicules.json.
+const fichiers = import.meta.glob<{ default: ImageMetadata }>('/src/assets/vehicules/*.{jpg,jpeg,png,webp,avif}', { eager: true });
+const nom = v.photos[index];
+const img = nom ? fichiers[`/src/assets/vehicules/${nom}`]?.default : undefined;
+---
+{img ? (
+  <Image src={img} alt={`${titre(v)} en vente chez MON AUTO à Groslay, photo ${index + 1}`} widths={[400, 800, 1200]} sizes="(min-width: 1024px) 33vw, 100vw" class={`w-full aspect-[4/3] object-cover ${cls}`} loading={eager ? 'eager' : 'lazy'} format="avif" />
+) : (
+  <div class={`photo-vide aspect-[4/3] ${cls}`} role="img" aria-label={`Emplacement photo : ${titre(v)}`}>
+    <span>{legende}</span>
+  </div>
+)}
